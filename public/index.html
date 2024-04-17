@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PixiJS Displacement Map Demo</title>
+    <!-- Include PixiJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js"></script>
+
+    <!-- Include PixiJS filters (only if you're using any special filters from this library) -->
+    <script src="https://cdn.jsdelivr.net/npm/pixi-filters@latest/dist/browser/pixi-filters.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      let app = new PIXI.Application({
+        width: 800,
+        height: 600,
+        backgroundColor: 0xffffff, // Or you can use transparent: true
+      });
+      document.body.appendChild(app.view);
+
+      PIXI.Loader.shared
+        .add("bedsheet", "/assets/bedsheet-2.jpg")
+        .add("pattern", "/assets/design-2.jpg")
+        .add("displacementMap", "/assets/displacementMap.jpg")
+        .load(setup);
+
+    
+
+      function setup(loader, resources) {
+        let bedsheetSprite = new PIXI.Sprite(resources.bedsheet.texture);
+        bedsheetSprite.width = app.screen.width;
+        bedsheetSprite.height = app.screen.height;
+        app.stage.addChild(bedsheetSprite);
+
+        let patternSprite = new PIXI.Sprite(resources.pattern.texture);
+        patternSprite.width = app.screen.width;
+        patternSprite.height = app.screen.height;
+        patternSprite.alpha = 0.7; // Adjust for better blend
+        patternSprite.blendMode = PIXI.BLEND_MODES.SOFT_LIGHT; // Try different blend modes
+        app.stage.addChild(patternSprite);
+
+        let displacementSprite = new PIXI.Sprite(
+          resources.displacementMap.texture
+        );
+        displacementSprite.width = app.screen.width;
+        displacementSprite.height = app.screen.height;
+        app.stage.addChild(displacementSprite); // For testing purposes
+
+        let displacementFilter = new PIXI.filters.DisplacementFilter(
+          displacementSprite
+        );
+        displacementFilter.scale.x = 30; // Adjust the filter scale
+        displacementFilter.scale.y = 30; // Adjust the filter scale
+        patternSprite.filters = [displacementFilter];
+
+        app.renderer.render(app.stage);
+      }
+
+
+
+
+    </script>
+  </body>
+</html>
